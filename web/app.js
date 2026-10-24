@@ -97,27 +97,6 @@
       <a href="${L.dataset}" target="_blank" rel="noopener">📊 typed-decisions dataset</a>`;
   })();
 
-  /* ---- Audio ---- */
-  (function audio() {
-    const btn = document.getElementById("playBtn");
-    const a = document.getElementById("narration");
-    btn.addEventListener("click", () => {
-      if (a.paused) {
-        a.play();
-        btn.textContent = "⏸ Pause narration";
-        btn.classList.add("playing");
-      } else {
-        a.pause();
-        btn.textContent = "▶ Play narration";
-        btn.classList.remove("playing");
-      }
-    });
-    a.addEventListener("ended", () => {
-      btn.textContent = "▶ Play narration";
-      btn.classList.remove("playing");
-    });
-  })();
-
   /* ---- Generalization: invoice case stepper ---- */
   (function cases() {
     const S = window.LAZY_SAMPLES || [];

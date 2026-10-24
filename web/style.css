@@ -48,17 +48,6 @@ code { background: #0b1623; padding: 1px 6px; border-radius: 6px; color: #9fd3c7
 .pipeline .arrow { color: var(--dim); }
 .hero-img img { width: 100%; border-radius: var(--radius); box-shadow: 0 20px 50px rgba(0,0,0,.45); display: block; }
 
-/* ---- Audio player ---- */
-.player { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
-.play-btn {
-  background: var(--winner); color: #04201b; border: none; padding: 11px 20px;
-  border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform .1s, filter .15s;
-}
-.play-btn:hover { filter: brightness(1.08); }
-.play-btn:active { transform: scale(.97); }
-.play-btn.playing { background: var(--tinker); color: #2a0e06; }
-.player-note { color: var(--dim); font-size: .88rem; }
-
 /* ---- Stats ---- */
 .stats {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
