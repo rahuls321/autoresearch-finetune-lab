@@ -2,7 +2,7 @@
 title: "LazyDecider: I taught an open-weight agent to fine-tune a model while I slept"
 published: false
 tags: devchallenge, hf26challenge, machinelearning, opensource
-cover_image: https://raw.githubusercontent.com/rahulkumaroffice0612-web/autoresearch-finetune-lab/main/artifacts/lazydecider_cover.png
+cover_image: https://raw.githubusercontent.com/rahuls321/autoresearch-finetune-lab/main/artifacts/lazydecider_cover.png
 ---
 
 > **DEV Hacktoberfest 2026 — Week 3, "Slow and Steady."**
@@ -24,7 +24,7 @@ morning? No cloud bill. No API meter spinning. Just a laptop quietly getting sma
 
 That project is **LazyDecider**.
 
-![LazyDecider — an open-weight agent keeps the winning configs and reverts the rest, while you nap](https://raw.githubusercontent.com/rahulkumaroffice0612-web/autoresearch-finetune-lab/main/artifacts/lazydecider_cover.png)
+![LazyDecider — an open-weight agent keeps the winning configs and reverts the rest, while you nap](https://raw.githubusercontent.com/rahuls321/autoresearch-finetune-lab/main/artifacts/lazydecider_cover.png)
 
 ## What I built
 
@@ -50,7 +50,7 @@ Two open partners do the heavy lifting, and that's deliberate:
 
 Everything below was produced by my own scorer on my own sealed split — no borrowed numbers.
 
-![Sealed-test results](https://raw.githubusercontent.com/rahulkumaroffice0612-web/autoresearch-finetune-lab/main/artifacts/results_comparison.png)
+![Sealed-test results](https://raw.githubusercontent.com/rahuls321/autoresearch-finetune-lab/main/artifacts/results_comparison.png)
 
 | Model | Role | Accuracy ↑ | KL from gold ↓ | Brier ↓ | ECE ↓ |
 |---|---|---:|---:|---:|---:|
@@ -84,7 +84,7 @@ LoRA — drops the validation loss from **1.04 → 0.84**, the single biggest ju
 chase calibration, land close, and get reverted. That keep-or-revert discipline is the difference
 between a search and a random walk.
 
-![Gemma-driven search curves](https://raw.githubusercontent.com/rahulkumaroffice0612-web/autoresearch-finetune-lab/main/artifacts/gemma_learning_curves.png)
+![Gemma-driven search curves](https://raw.githubusercontent.com/rahuls321/autoresearch-finetune-lab/main/artifacts/gemma_learning_curves.png)
 
 ## The time my agent tried to game the score
 
@@ -124,7 +124,7 @@ retrains it and Tinker confirms it. The ten-minute job I automated? I never do i
 
 ## Try it / dig in
 
-- **Repo:** https://github.com/rahulkumaroffice0612-web/autoresearch-finetune-lab
+- **Repo:** https://github.com/rahuls321/autoresearch-finetune-lab
 - **Model:** https://huggingface.co/rahulkumar0612/lazydecider-0.8b
 - **Live demo UI:** a static "night dashboard" that replays the real overnight loop — Gemma's
   proposals and reasons, the ASHA keep/revert decisions, the charts, the results table, and the

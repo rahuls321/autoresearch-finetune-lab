@@ -169,7 +169,7 @@ with gr.Blocks(title="LazyDecider Playground", theme=gr.themes.Soft()) as demo:
         "Run the **real 0.8B agent-decision model** on your own invoice. It reads the invoice against "
         "its purchase order and delivery, then makes the accounts-payable call as calibrated "
         "probabilities. Model: [`rahulkumar0612/lazydecider-0.8b`](https://huggingface.co/rahulkumar0612/lazydecider-0.8b) "
-        "· [project repo](https://github.com/rahulkumaroffice0612-web/autoresearch-finetune-lab)."
+        "· [project repo](https://github.com/rahuls321/autoresearch-finetune-lab)."
     )
     with gr.Row():
         with gr.Column(scale=1):

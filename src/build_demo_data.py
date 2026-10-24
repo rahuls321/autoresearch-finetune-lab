@@ -53,7 +53,7 @@ def main() -> None:
         "armA": runs("A"),
         "armB": runs("B"),
         "links": {
-            "repo": "https://github.com/rahulkumaroffice0612-web/autoresearch-finetune-lab",
+            "repo": "https://github.com/rahuls321/autoresearch-finetune-lab",
             "model": "https://huggingface.co/rahulkumar0612/lazydecider-0.8b",
             "dataset": "https://huggingface.co/datasets/LocalLLaMA/typed-decisions",
         },
