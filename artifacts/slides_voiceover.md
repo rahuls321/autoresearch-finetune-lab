@@ -49,3 +49,16 @@ Voiced locally with macOS `say` (Daniel), synced slide-by-slide.
 
 ## Slide 15 — The lazy payoff
 > So that's the lazy payoff. I wake up, read what it tried, retrain the winner in one command — and never babysit a sweep again.
+
+## Slide 16 — Playground intro
+> But don't take the numbers on faith — let's actually run the model. This is the local playground: the real point-eight billion model, loaded on my laptop, deciding on real invoices.
+
+## Slide 17 — Example 1: clean match
+> First, a clean invoice — the total matches the purchase order, the delivery's accepted, the vendor's trusted. I hit Decide, and the model approves it, with high confidence. Exactly what you'd want.
+
+## Slide 18 — Example 2: over-invoiced
+> Now a tougher one — the vendor billed about twelve percent over the agreed order. The model doesn't just reject blindly; it flags it for review, because a human should confirm a discrepancy that size.
+
+## Slide 19 — Example 3: under-delivered
+> And the trickiest case — half the goods arrived, but the invoice is still high. The model catches the mismatch and routes it to manual review. And notice it's not just a label — every decision comes with a full, calibrated probability distribution. That's the model we found, working, live.
+
