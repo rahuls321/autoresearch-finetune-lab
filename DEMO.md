@@ -152,5 +152,5 @@ uv pip install --python .venv/bin/python playwright==1.63.0
 cursor + click ripple, and clicks the real controls, waiting for the real model response between steps.
 
 ## Where it goes
-Embed the final video (`artifacts/demo_video/lazydecider_demo.mp4`) or an asciinema cast in `POST.md`
-at the **Demo** line, alongside the repo and Hugging Face links.
+Embed the final video (`artifacts/demo_video/lazydecider_slides.mp4`) or an asciinema cast in the
+DEV submission post at the **Demo** line, alongside the repo and Hugging Face links.

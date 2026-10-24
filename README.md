@@ -13,6 +13,9 @@ Built for DEV Hacktoberfest 2026 Week 3 ("Slow and Steady"). Tags: `#devchalleng
   — `unsloth/Qwen3.5-0.8B` + a Clef joint decision head, LoRA fine-tuned.
 - **Live demo:** **https://lazydecider-demo.onrender.com** — the overnight-run dashboard (source in `web/`).
 
+> **Note:** the GitHub repo (`rahuls321`) and the Hugging Face model (`rahulkumar0612`) are both mine —
+> same author, two platforms.
+
 ## Results (sealed test, 2,000 decisions)
 
 | Model | How | Accuracy | KL↓ | Brier↓ | ECE↓ |
