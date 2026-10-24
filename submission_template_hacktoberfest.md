@@ -38,18 +38,37 @@ its strongest trained domain being invoice processing at **0.840**.
 
 ## Demo
 
-**Live demo UI (hosted on Render):** https://lazydecider-demo.onrender.com
+There are three ways to see LazyDecider, from "just look" to "run it yourself":
 
-A static "night dashboard" that replays the **real** overnight loop — Gemma's proposals and reasons,
-the ASHA keep/revert decisions, the charts and results table — and ends with a **live playground** that
-runs the real 0.8B model on an invoice.
+**1. Interactive UI — the night dashboard (hosted on Render):** https://lazydecider-demo.onrender.com
 
-**Demo video (~85s, fully live + narrated):** a real browser scrolls the dashboard while the overnight
-loop animates (keep/revert), then drives the live playground — it loads an invoice preset, presses
-**Decide**, and the real model returns `approve · 83%`, then a `manual review` discrepancy case.
+A static web page that replays the **real** overnight run from the committed logs: Gemma's config
+proposals and one-line reasons, the ASHA **keep/revert** decisions, the learning-curve and results
+charts, and the sealed-test table. Nothing is faked — it reads the actual experiment log.
 
-<!-- TODO before publishing: upload artifacts/demo_video/lazydecider_demo.mp4 to YouTube and embed it:
+**2. Hands-on playground — run the real model (local):** a Gradio app that loads the real 0.8B model
+(`artifacts/best_model`) and decides on an invoice you configure. It's embedded in the UI above under
+*"▶ Try it yourself"*, and runs locally in three commands:
+
+```bash
+git clone https://github.com/rahuls321/autoresearch-finetune-lab
+cd autoresearch-finetune-lab
+uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python unsloth gradio
+.venv/bin/python src/playground.py            # opens http://127.0.0.1:7860
+```
+
+**3. Walkthrough video (~3.5 min, narrated):** a guided tour — the task and model, the exact configs
+Gemma proposed with the ASHA keep/revert calls, the "can't cheat" guardrails, and every sealed-test
+number — ending with a **live playground finale** where the real 0.8B model is driven on three
+invoices: a clean match returns `approve · 83%`, an over-invoiced case is flagged for `review`, and an
+under-delivered case returns `manual review`.
+
+{% embed https://lazydecider-demo.onrender.com/assets/lazydecider_slides.mp4 %}
+
+<!-- Note: DEV may not play a raw .mp4 inline. If it doesn't render, either link it as above or
+     upload artifacts/demo_video/lazydecider_slides.mp4 to YouTube and embed that URL instead:
 {% embed <YOUTUBE_URL> %} -->
+
 
 ## Code
 
