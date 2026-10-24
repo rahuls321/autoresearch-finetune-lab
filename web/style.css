@@ -80,6 +80,20 @@ code { background: #0b1623; padding: 1px 6px; border-radius: 6px; color: #9fd3c7
 .demo-video a { color: #9fd3c7; }
 @media (max-width: 680px) { .vd-note { display: none; } }
 
+/* ---- Deck CTA ---- */
+.deck-cta { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+.deck-cta .hint { margin: 6px 0 0; max-width: 62ch; }
+.deck-cta-actions { display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
+.deck-btn {
+  display: inline-block; text-align: center; text-decoration: none;
+  background: var(--winner); color: #06211c; font-weight: 700;
+  padding: 11px 18px; border-radius: 10px; border: 1px solid transparent;
+}
+.deck-btn:hover { filter: brightness(1.08); }
+.deck-btn.ghost { background: transparent; color: #9fd3c7; border-color: var(--line); font-weight: 600; }
+.deck-btn.ghost:hover { border-color: var(--winner); }
+@media (max-width: 680px) { .deck-cta-actions { width: 100%; } }
+
 /* ---- Panels ---- */
 .panel { max-width: 1100px; margin: 26px auto; padding: 26px; background: var(--bg2);
   border: 1px solid var(--line); border-radius: 18px; }

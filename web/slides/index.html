@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LazyDecider — how an open-weight agent fine-tuned a model while I slept</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="slides.css" />
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- 1. Title -->
+    <section data-background-gradient="radial-gradient(1200px 600px at 80% -10%, #1b3a57 0%, #0d1b2a 55%)">
+      <div class="badges">
+        <span class="badge">#devchallenge</span>
+        <span class="badge">#hf26challenge</span>
+        <span class="badge badge-accent">Slow &amp; Steady</span>
+      </div>
+      <h1>Lazy<span class="accent">Decider</span></h1>
+      <p class="tagline">How an <strong>open-weight agent</strong> fine-tuned a decision model
+        for me — proposing configs, pruning the losers, keeping only winners — <em>while I slept</em>.</p>
+      <div class="pipeline">
+        <span class="step gemma">🦥 Gemma 4 E4B <em>proposes</em></span>
+        <span class="arrow">→</span>
+        <span class="step">✂️ ASHA <em>prunes</em></span>
+        <span class="arrow">→</span>
+        <span class="step">✅ keep / ↩︎ revert</span>
+        <span class="arrow">→</span>
+        <span class="step tinker">🔬 Tinker <em>confirms</em></span>
+      </div>
+      <p class="footnote">Local · open weights · sealed test · ~$0 on a laptop</p>
+    </section>
+
+    <!-- 2. The problem -->
+    <section>
+      <h2>The ten-minute job I refused to do again</h2>
+      <p class="lead">Hyperparameter babysitting:</p>
+      <ul class="big">
+        <li>change the learning rate → kick off a run → stare at the loss curve</li>
+        <li>change the LoRA rank → repeat → fall asleep at the desk</li>
+      </ul>
+      <p class="punch">So I automated it. The search runs <strong>overnight</strong>, for free,
+        on my own laptop. I wake up and read a report.</p>
+    </section>
+
+    <!-- 3. The task + data -->
+    <section>
+      <h2>The task — typed decisions</h2>
+      <p class="lead">A model reads a case and makes a calibrated accounts-payable style call
+        across <strong>4 domains</strong>, scored against a <strong>teacher consensus (gold)</strong>.</p>
+      <table class="mini">
+        <thead><tr><th>Domain</th><th>Cases</th><th>What the model decides</th></tr></thead>
+        <tbody>
+          <tr><td>invoice_processing</td><td>100</td><td>approve / review an invoice vs its PO</td></tr>
+          <tr><td>customer_service</td><td>100</td><td>route / escalate a ticket</td></tr>
+          <tr><td>security_incidents</td><td>100</td><td>triage severity &amp; response</td></tr>
+          <tr><td>agent_trace_observability</td><td>100</td><td>flag anomalous agent traces</td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">Metric that matters: <strong>KL from gold</strong> (distribution match), not just top-1 accuracy.</p>
+    </section>
+
+    <!-- 4. The model under the hood -->
+    <section>
+      <h2>The model we fine-tune</h2>
+      <div class="two-col">
+        <div>
+          <ul class="big">
+            <li><strong>Base:</strong> <code>Qwen3.5-0.8B</code> (open weights)</li>
+            <li><strong>+ Clef joint-decision head</strong> — emits a probability over all decisions</li>
+            <li><strong>Trained with Unsloth</strong>, LoRA on an 18 GB Mac (MLX)</li>
+          </ul>
+        </div>
+        <div>
+          <ul class="big">
+            <li><strong>Two knobs the agent plays with:</strong></li>
+            <li>head-only vs unfreeze backbone (LoRA)</li>
+            <li>LoRA rank/alpha, LR, label smoothing, weight decay, dropout, epochs</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Architecture -->
+    <section>
+      <h2>The overnight loop</h2>
+      <div class="arch">
+        <div class="node gemma">🦥<br><strong>Gemma 4 E4B</strong><br><small>reads the log, proposes<br>1 config + 1-line reason</small></div>
+        <div class="flow">→</div>
+        <div class="node">✂️<br><strong>ASHA pruner</strong><br><small>trains it, kills it early<br>if it's losing</small></div>
+        <div class="flow">→</div>
+        <div class="node">⚖️<br><strong>keep / revert</strong><br><small>kept only if it beats<br>best on frozen split</small></div>
+        <div class="flow">→</div>
+        <div class="node tinker">🔬<br><strong>Tinker</strong><br><small>bigger model, same<br>sealed test = referee</small></div>
+      </div>
+      <p class="footnote">Gemma only ever sees <code>fit</code> / <code>select</code> / <code>calib</code> — never the sealed test.</p>
+    </section>
+
+    <!-- 6. ASHA explained -->
+    <section>
+      <h2>Why ASHA — don't waste the night on losers</h2>
+      <p class="lead">Asynchronous Successive Halving: evaluate at <strong>rungs</strong>, prune the
+        bottom performers early, let the promising runs train longer.</p>
+      <table class="mini">
+        <thead><tr><th>Rung (step)</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td>20</td><td>first checkpoint — obvious failures killed here</td></tr>
+          <tr><td>60</td><td>bottom percentile pruned</td></tr>
+          <tr><td>140</td><td>survivors continue</td></tr>
+          <tr><td>240</td><td>full run — only the best reach here</td></tr>
+        </tbody>
+      </table>
+      <p class="punch">A bad config costs minutes, not the whole night.</p>
+    </section>
+
+    <!-- 7. The real search — config table -->
+    <section>
+      <h2>What Gemma actually tried <span class="sub">— verbatim from the log</span></h2>
+      <table class="runs-table">
+        <thead>
+          <tr><th>#</th><th>backbone</th><th>LR</th><th>LoRA r/α</th><th>smooth</th><th>wd</th><th>ep</th><th>select loss</th><th>acc</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr class="keep"><td>1</td><td>frozen</td><td>1e-4</td><td>16/32</td><td>0.00</td><td>0.01</td><td>2</td><td>1.041</td><td>0.523</td><td class="k">✅ keep</td></tr>
+          <tr class="keep best"><td>2</td><td><b>unfrozen</b></td><td>2e-4</td><td>16/32</td><td>0.00</td><td>0.01</td><td>2</td><td><b>0.840</b></td><td><b>0.782</b></td><td class="k">✅ keep</td></tr>
+          <tr class="revert"><td>3</td><td>unfrozen</td><td>1.5e-4</td><td>16/32</td><td>0.06</td><td>0.05</td><td>2</td><td>0.842</td><td>0.787</td><td class="r">↩︎ revert</td></tr>
+          <tr class="revert"><td>4</td><td>unfrozen</td><td>1e-4</td><td>16/32</td><td>0.08</td><td>0.05</td><td>1</td><td>0.884</td><td>0.767</td><td class="r">↩︎ revert</td></tr>
+          <tr class="revert"><td>5</td><td>unfrozen</td><td>8e-5</td><td>8/16</td><td>0.03</td><td>0.08</td><td>2</td><td>0.857</td><td>0.767</td><td class="r">↩︎ revert</td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">Run 3 had marginally higher accuracy but <em>higher select loss</em> than run 2 → not kept. The loop optimizes loss, not vanity accuracy.</p>
+    </section>
+
+    <!-- 8. The decisive move -->
+    <section>
+      <h2>Run 2 — the night's one big move</h2>
+      <blockquote>“Enable LoRA fine-tuning on the backbone to see if adapted encoder
+        representations improve beyond the head-only baseline.”<cite>— Gemma, run 2 (kept)</cite></blockquote>
+      <div class="stat-row">
+        <div class="stat"><div class="num">1.04 → 0.84</div><div class="lbl">select loss drop</div></div>
+        <div class="stat win"><div class="num">+0.26</div><div class="lbl">accuracy jump (0.52 → 0.78)</div></div>
+      </div>
+      <p class="punch">Unfreezing the backbone with LoRA was the single biggest gain — and the agent
+        found it on its own, then spent runs 3–5 chasing calibration and reverting each one.</p>
+    </section>
+
+    <!-- 9. Learning curves chart -->
+    <section>
+      <h2>ASHA select-loss, per config</h2>
+      <img src="../assets/gemma_learning_curves.png" alt="ASHA select-loss curves per Gemma-proposed config" class="chart" />
+      <p class="footnote">Run 2 (unfrozen LoRA) separates from the pack by rung 140 and holds the lead.</p>
+    </section>
+
+    <!-- 10. The "can't cheat" story -->
+    <section>
+      <h2>The “can’t cheat” part</h2>
+      <p class="lead">Early on, the loop found a “winner” suspiciously fast — a too-small validation
+        subsample let a lucky run look great. <strong>The agent wasn’t cheating; it was optimizing the
+        number I gave it.</strong></p>
+      <ul class="big">
+        <li>🔒 <strong>Sealed test</strong> — only its SHA-256 is committed; the worker can’t read the cases</li>
+        <li>📏 <strong>Scorer</strong> copies the dataset’s grading arithmetic verbatim</li>
+        <li>💸 Worker <strong>strips <code>TINKER_*</code></strong> from env — the free local loop can’t spend a cent</li>
+        <li>🧊 Every finalist’s config is <strong>committed to git before</strong> its one-shot sealed read</li>
+      </ul>
+    </section>
+
+    <!-- 11. Results -->
+    <section>
+      <h2>Sealed-test results</h2>
+      <table class="runs-table results">
+        <thead><tr><th>Model</th><th>Role</th><th>Acc ↑</th><th>KL ↓</th><th>Brier ↓</th><th>ECE ↓</th></tr></thead>
+        <tbody>
+          <tr><td>Prior / Uniform</td><td>reference</td><td>0.470</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Zero-shot base</td><td>no training</td><td>0.483</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr class="tinker-row"><td>Tinker 4B</td><td>cloud referee</td><td>0.601</td><td>0.642</td><td>0.172</td><td>0.094</td></tr>
+          <tr class="win"><td><b>LazyDecider 0.8B</b></td><td><b>the winner</b></td><td><b>0.770</b></td><td><b>0.094</b></td><td><b>0.051</b></td><td>0.145</td></tr>
+        </tbody>
+      </table>
+      <p class="punch">A 0.8B model, found autonomously, lands <strong>KL 0.094</strong> — the metric
+        this benchmark optimizes — for ~$0 on an 18 GB Mac.</p>
+    </section>
+
+    <!-- 12. Per-domain -->
+    <section>
+      <h2>Per-domain — strongest on invoices</h2>
+      <table class="runs-table">
+        <thead><tr><th>Domain</th><th>Acc ↑</th><th>KL ↓</th><th>Brier ↓</th><th>ECE ↓</th></tr></thead>
+        <tbody>
+          <tr class="win"><td><b>invoice_processing</b></td><td><b>0.840</b></td><td>0.093</td><td>0.045</td><td>0.114</td></tr>
+          <tr><td>customer_service</td><td>0.796</td><td>0.115</td><td>0.059</td><td>0.162</td></tr>
+          <tr><td>security_incidents</td><td>0.738</td><td><b>0.074</b></td><td>0.043</td><td>0.163</td></tr>
+          <tr><td>agent_trace_observability</td><td>0.706</td><td>0.094</td><td>0.056</td><td>0.156</td></tr>
+          <tr class="overall"><td>Overall (400)</td><td>0.770</td><td>0.094</td><td>0.051</td><td>0.145</td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">Best accuracy on invoices (0.840); best-calibrated on security incidents (KL 0.074).</p>
+    </section>
+
+    <!-- 13. Tinker referee -->
+    <section>
+      <h2>Tinker — the independent referee</h2>
+      <p class="lead">A different model (<code>Qwen3.5-4B</code> LoRA), different hardware (cloud),
+        <strong>same sealed test</strong> — does the recipe transfer?</p>
+      <div class="stat-row">
+        <div class="stat tinker"><div class="num">0.601</div><div class="lbl">Tinker 4B accuracy</div></div>
+        <div class="stat"><div class="num">0.483</div><div class="lbl">zero-shot baseline</div></div>
+        <div class="stat"><div class="num">$2 / $10</div><div class="lbl">hard-capped spend</div></div>
+      </div>
+      <p class="punch">A clear lift over zero-shot on the same ruler = the pipeline isn’t fooling itself.</p>
+    </section>
+
+    <!-- 14. Why open -->
+    <section>
+      <h2>Why open innovation matters here</h2>
+      <ul class="big">
+        <li>🦥 <strong>Agent + model are both open weights</strong> → hundreds of reasoning calls a night cost <strong>$0</strong></li>
+        <li>🔓 <strong>The model is yours</strong> → run it offline, push the adapter to HF, fork the recipe</li>
+        <li>🔍 <strong>Guardrails are auditable</strong> → “can’t cheat” is only credible when anyone can read the sealing logic</li>
+      </ul>
+      <p class="punch">A closed API couldn’t give me all three: free overnight reasoning, full ownership, and verifiable integrity.</p>
+    </section>
+
+    <!-- 15. Close -->
+    <section data-background-gradient="radial-gradient(1200px 600px at 80% -10%, #1b3a57 0%, #0d1b2a 55%)">
+      <h1>The lazy payoff</h1>
+      <p class="tagline">I wake up, open <code>REPORT.md</code>, read what Gemma tried and why,
+        run one command to retrain the winner — and Tinker confirms it.
+        <strong>I never babysit a sweep again.</strong></p>
+      <div class="links">
+        <span class="link">🌐 lazydecider-demo.onrender.com</span>
+        <span class="link">⌁ github.com/rahuls321/autoresearch-finetune-lab</span>
+      </div>
+      <p class="footnote">Open agent · open model · sealed test · built on a laptop, while asleep.</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    controls: true,
+    progress: true,
+    center: false,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    width: 1280,
+    height: 720,
+    margin: 0,
+  });
+</script>
+</body>
+</html>
