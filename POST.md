@@ -126,9 +126,10 @@ retrains it and Tinker confirms it. The ten-minute job I automated? I never do i
 
 - **Repo:** https://github.com/rahuls321/autoresearch-finetune-lab
 - **Model:** https://huggingface.co/rahulkumar0612/lazydecider-0.8b
-- **Live demo UI:** a static "night dashboard" that replays the real overnight loop — Gemma's
-  proposals and reasons, the ASHA keep/revert decisions, the charts, the results table, and the
-  narration. Source in `web/` (deploys free on Render, or any static host). *(paste your live URL here)*
+- **Live demo UI:** **https://lazydecider-demo.onrender.com** — a static "night dashboard" that
+  replays the real overnight loop — Gemma's proposals and reasons, the ASHA keep/revert decisions, the
+  charts, the results table, and the narration. Source in `web/` (deploys free on Render, or any
+  static host).
 - **Try the model (playground):** `bash src/run_playground.sh` spins up a local Gradio app where you
   type an invoice (total, PO, quantities, due date, vendor history) and watch the **real model** make
   the accounts-payable call with calibrated confidence. Add `--share` for a temporary public link.

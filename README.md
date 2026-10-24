@@ -11,6 +11,7 @@ Built for DEV Hacktoberfest 2026 Week 3 ("Slow and Steady"). Tags: `#devchalleng
 
 - **Model:** [`rahulkumar0612/lazydecider-0.8b`](https://huggingface.co/rahulkumar0612/lazydecider-0.8b)
   — `unsloth/Qwen3.5-0.8B` + a Clef joint decision head, LoRA fine-tuned.
+- **Live demo:** **https://lazydecider-demo.onrender.com** — the overnight-run dashboard (source in `web/`).
 
 ## Results (sealed test, 2,000 decisions)
 
