@@ -1,5 +1,7 @@
 # lazylab
 
+![LazyDecider — an open-weight agent keeps the winning configs and reverts the rest, while you nap](https://raw.githubusercontent.com/rahuls321/autoresearch-finetune-lab/main/artifacts/lazydecider_cover.png)
+
 An overnight lab that fine-tunes a small **decision model** for the
 [`LocalLLaMA/typed-decisions`](https://huggingface.co/datasets/LocalLLaMA/typed-decisions)
 benchmark — while you sleep. A **local, open-weight agent (Gemma 4 E4B)** proposes hyperparameter
