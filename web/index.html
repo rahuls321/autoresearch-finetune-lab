@@ -40,16 +40,20 @@
     </div>
   </header>
 
-  <!-- ===== Demo video ===== -->
+  <!-- ===== Demo video (collapsed by default) ===== -->
   <section class="panel demo-video">
-    <h2>Watch the overnight run <span class="sub">— ~90s, narrated</span></h2>
-    <p class="hint">The loop and report replay the <strong>real logs</strong>; the finale is the
-      <strong>live playground</strong> running the real 0.8B model on an invoice.</p>
-    <video controls preload="none" poster="assets/demo_poster.png" playsinline>
-      <source src="assets/lazydecider_demo.mp4" type="video/mp4" />
-      Your browser can't play embedded video —
-      <a href="assets/lazydecider_demo.mp4">download the demo (MP4)</a>.
-    </video>
+    <details class="video-disclosure">
+      <summary>
+        <span class="vd-title">▶ Watch the overnight run</span>
+        <span class="vd-note">~90s, narrated — the loop + report replay the real logs; finale is the live playground</span>
+        <span class="vd-chev" aria-hidden="true">▾</span>
+      </summary>
+      <video controls preload="none" poster="assets/demo_poster.png" playsinline>
+        <source src="assets/lazydecider_demo.mp4" type="video/mp4" />
+        Your browser can't play embedded video —
+        <a href="assets/lazydecider_demo.mp4">download the demo (MP4)</a>.
+      </video>
+    </details>
   </section>
 
   <!-- ===== Headline stats ===== -->

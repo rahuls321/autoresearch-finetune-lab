@@ -71,12 +71,25 @@ code { background: #0b1623; padding: 1px 6px; border-radius: 6px; color: #9fd3c7
 .stat .lbl { color: var(--dim); font-size: .85rem; }
 .stat.win .num { color: var(--winner); }
 
-/* ---- Demo video ---- */
-.demo-video video {
-  width: 100%; border-radius: 12px; border: 1px solid var(--line);
-  background: #000; display: block; box-shadow: 0 16px 44px rgba(0,0,0,.4);
+/* ---- Demo video (collapsible) ---- */
+.demo-video { padding: 0; overflow: hidden; }
+.video-disclosure > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px;
+  padding: 20px 26px; user-select: none;
 }
-.demo-video .hint a { color: #9fd3c7; }
+.video-disclosure > summary::-webkit-details-marker { display: none; }
+.video-disclosure > summary:hover { background: rgba(42,157,143,.06); }
+.vd-title { font-size: 1.25rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.vd-note { color: var(--dim); font-size: .92rem; flex: 1; min-width: 0; }
+.vd-chev { color: var(--dim); font-size: 1.1rem; transition: transform .2s; }
+.video-disclosure[open] > summary .vd-chev { transform: rotate(180deg); }
+.demo-video video {
+  width: 100%; border: 0; border-top: 1px solid var(--line);
+  background: #000; display: block;
+}
+.demo-video .video-disclosure[open] video { border-radius: 0 0 18px 18px; }
+.demo-video a { color: #9fd3c7; }
+@media (max-width: 680px) { .vd-note { display: none; } }
 
 /* ---- Panels ---- */
 .panel { max-width: 1100px; margin: 26px auto; padding: 26px; background: var(--bg2);
