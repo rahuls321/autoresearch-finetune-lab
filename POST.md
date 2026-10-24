@@ -125,6 +125,8 @@ retrains it and Tinker confirms it. The ten-minute job I automated? I never do i
 
 ## Try it / dig in
 
+{% embed https://github.com/rahuls321/autoresearch-finetune-lab %}
+
 - **Repo:** https://github.com/rahuls321/autoresearch-finetune-lab
 - **Model:** https://huggingface.co/rahulkumar0612/lazydecider-0.8b
 - **Live demo UI:** **https://lazydecider-demo.onrender.com** — a static "night dashboard" that
@@ -138,9 +140,9 @@ retrains it and Tinker confirms it. The ten-minute job I automated? I never do i
 - **Demo video:** a ~85s **fully live, narrated** walkthrough — a real browser scrolls the dashboard
   while the overnight loop animates (keep/revert), then drives the **live playground**: it loads an
   invoice preset, presses **Decide**, and the real 0.8B model returns `approve · 83%` (then the
-  `manual review` discrepancy case). See `artifacts/demo_video/lazydecider_demo.mp4`
-  (`playground_live.mp4` is the standalone live playground clip). *(upload to the DEV post or YouTube
-  and paste the link here)*
+  `manual review` discrepancy case). *(The MP4 is in the repo at
+  `artifacts/demo_video/lazydecider_demo.mp4`; before publishing, upload it to YouTube and embed the
+  link here, or use the `{% embed %}` liquid tag.)*
 
 Reproduce in four commands (`README.md` has the full version):
 
@@ -153,6 +155,9 @@ bash src/run_gemma_search.sh               # let Gemma search overnight
 
 ### Prize categories entered
 
+- **Best Use of Render** — the live demo UI (the overnight-run dashboard + the embedded walkthrough)
+  is hosted on Render as a static site, deployed straight from `render.yaml` with zero build config:
+  [lazydecider-demo.onrender.com](https://lazydecider-demo.onrender.com).
 - **Best Use of Gemma** — Gemma 4 E4B is the autonomous researcher proposing every config locally and
   for free, with a real, reasoned experiment log.
 - **Best Use of Tinker** — a dollar-capped `Qwen3.5-4B` LoRA confirm run that lifts clearly over the
