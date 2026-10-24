@@ -120,7 +120,7 @@
       <h2>What Gemma actually tried <span class="sub">— verbatim from the log</span></h2>
       <table class="runs-table">
         <thead>
-          <tr><th>#</th><th>backbone</th><th>LR</th><th>LoRA r/α</th><th>smooth</th><th>wd</th><th>ep</th><th>select loss</th><th>acc</th><th></th></tr>
+          <tr><th>#</th><th>backbone</th><th>LR</th><th>LoRA r/α</th><th>smooth</th><th>wd</th><th>ep</th><th>select loss</th><th>select acc</th><th></th></tr>
         </thead>
         <tbody>
           <tr class="keep"><td>1</td><td>frozen</td><td>1e-4</td><td>16/32</td><td>0.00</td><td>0.01</td><td>2</td><td>1.041</td><td>0.523</td><td class="k">✅ keep</td></tr>
@@ -130,7 +130,7 @@
           <tr class="revert"><td>5</td><td>unfrozen</td><td>8e-5</td><td>8/16</td><td>0.03</td><td>0.08</td><td>2</td><td>0.857</td><td>0.767</td><td class="r">↩︎ revert</td></tr>
         </tbody>
       </table>
-      <p class="footnote">Run 3 had marginally higher accuracy but <em>higher select loss</em> than run 2 → not kept. The loop optimizes loss, not vanity accuracy.</p>
+      <p class="footnote">These are <strong>select-split</strong> scores measured <em>during</em> the search (what Gemma optimizes). Run 3 had marginally higher accuracy but <em>higher select loss</em> than run 2 → not kept. The headline <strong>0.770</strong> on later slides is the winner’s accuracy on the <strong>sealed test</strong> — a different, unseen split.</p>
     </section>
 
     <!-- 8. The decisive move -->
